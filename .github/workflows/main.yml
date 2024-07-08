@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
-        uses: actions/checkout@latest
+        uses: actions/checkout@4.1.7
 
       - name: Greeting Message
         run: echo "Hello, world"
