@@ -1,1 +1,15 @@
+name: Workflow Name
+on: 
+ push:
+  branches:
+   - main
 
+jobs:
+  say_hello:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout
+
+      - name: Greeting Message
+        run: echo Hello, world
