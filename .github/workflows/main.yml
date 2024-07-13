@@ -14,11 +14,11 @@ jobs:
 
       - name: Set Environment Variables
         env: |
-          ISSUE_NUMBER=${{ github.event.issue.number }}
-          ISSUE_TITLE=${{ github.event.issue.title }}
-          ISSUE_BODY=${{ github.event.issue.body }}
-          ISSUE_ASSIGNEES=${{ join(github.event.issue.assignees.*.login, ', ') }}
-          ISSUE_LABELS=${{ join(github.event.issue.labels.*.name, ', ') }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_ASSIGNEES: ${{ join(github.event.issue.assignees.*.login, ', ') }}
+          ISSUE_LABELS: ${{ join(github.event.issue.labels.*.name, ', ') }}
 
       - name: Print Issue Information
         run: |
