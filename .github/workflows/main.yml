@@ -2,7 +2,7 @@ name: Autocoder Bot Workflow
 
 on:
   issues:
-    types: [opened, reopened]
+    types: [opened, reopened, labeled]
 
 jobs:
   access_issue_info:
