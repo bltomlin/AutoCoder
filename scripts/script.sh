@@ -58,6 +58,8 @@ if [[ -z "$RESPONSE" ]]; then
     exit 1
 fi
 
+echo $RESPONSE
+
 # Extract the JSON dictionary from the response
 # Make sure that the extracted content is valid JSON
 FILES_JSON=$(echo "$RESPONSE" | jq -e '.choices[0].message.content | fromjson' 2> /dev/null)
