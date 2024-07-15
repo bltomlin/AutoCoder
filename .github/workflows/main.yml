@@ -39,7 +39,7 @@ jobs:
           python-version: '3.x'
 
       - name: Make script executable
-        run: chmod +x /scripts/script.sh
+        run: chmod +x /home/runner/work/AutoCoder/AutoCoder/scripts/script.sh
 
       - name: Run script
         env:
@@ -47,7 +47,7 @@ jobs:
           REPOSITORY: ${{ github.repository }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: ./script.sh $GITHUB_TOKEN $REPOSITORY $ISSUE_NUMBER $OPENAI_API_KEY
+        run: ./home/runner/work/AutoCoder/AutoCoder/scripts/script.sh $GITHUB_TOKEN $REPOSITORY $ISSUE_NUMBER $OPENAI_API_KEY
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
