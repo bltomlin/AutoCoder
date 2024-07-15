@@ -39,7 +39,7 @@ jobs:
           python-version: '3.x'
 
       - name: Make script executable
-        run: chmod +x script.sh
+        run: chmod +x ~/scripts/script.sh
 
       - name: Run script
         env:
