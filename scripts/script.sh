@@ -17,14 +17,13 @@ fetch_issue_details() {
 
 # Function to send prompt to the ChatGPT model (OpenAI API)
 send_prompt_to_chatgpt() {
-    # Ensure messages JSON is properly escaped
-    local escaped_messages_json=$(echo "$MESSAGES_JSON" | sed 's/"/\\"/g')
+    local url="https://api.openai.com/v1/chat/completions"
+    local escaped_messages_json=$(echo "$MESSAGES_JSON" | jq -c .)
 
-    # Send POST request to OpenAI API
-    curl -s -X POST "https://api.openai.com/v1/chat/completions" \
+    curl -s -X POST "$url" \
         -H "Authorization: Bearer $OPENAI_API_KEY" \
         -H "Content-Type: application/json" \
-        -d "{\"model\": \"gpt-3.5-turbo\", \"messages\": $escaped_messages_json, \"max_tokens\": 500}"
+        -d "$escaped_messages_json"
 }
 
 # Function to save code snippet to file
