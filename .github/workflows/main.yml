@@ -5,7 +5,7 @@ on:
     types: [opened, reopened, labeled]
 
 jobs:
-  access_issue_info:
+  generate_code:
     runs-on: ubuntu-latest
 
     steps:
@@ -26,12 +26,7 @@ jobs:
           echo "Issue Assignees: $ISSUE_ASSIGNEES"
           echo "Issue Labels: $ISSUE_LABELS"
 
-      - name: Install jq
-        run: sudo apt-get update && sudo apt-get install -y jq
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Make script executable
+      - name: Set permissions for script.sh
         run: chmod +x scripts/script.sh
 
       - name: Run script
@@ -42,17 +37,17 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: ./scripts/script.sh $GITHUB_TOKEN $REPOSITORY $ISSUE_NUMBER $OPENAI_API_KEY
 
-      - name: Upload artifact
+      - name: Upload generated files as artifacts
         uses: actions/upload-artifact@v2
         with:
           name: autocoder-artifact
           path: ./autocoder-bot
 
-      - name: Download artifact
+      - name: Download artifacts
         uses: actions/download-artifact@v2
         with:
           name: autocoder-artifact
           path: ./autocoder-artifact
 
-      - name: List files
+      - name: List files in artifact
         run: ls -R ./autocoder-artifact
