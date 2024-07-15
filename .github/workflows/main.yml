@@ -26,10 +26,6 @@ jobs:
           echo "Issue Assignees: $ISSUE_ASSIGNEES"
           echo "Issue Labels: $ISSUE_LABELS"
 
-  run-script:
-    if: contains(github.event.issue.labels.*.name, 'autocoder-bot')
-    runs-on: ubuntu-latest
-    steps:
       - name: Install jq
         run: sudo apt-get update && sudo apt-get install -y jq
       - name: Checkout repository
@@ -52,10 +48,6 @@ jobs:
           name: autocoder-artifact
           path: ./autocoder-bot
 
-  download-artifact:
-    needs: run-script
-    runs-on: ubuntu-latest
-    steps:
       - name: Download artifact
         uses: actions/download-artifact@v2
         with:
