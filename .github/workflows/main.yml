@@ -18,12 +18,7 @@ jobs:
       - name: Check if issue has 'autocoder-bot' label
         id: check_label
         run: |
-          labels=$(echo '${{ toJson(github.event.issue.labels) }}' | jq -r '.[].name')
-          if echo "$labels" | grep -q 'autocoder-bot'; then
             echo "has_label=true" >> $GITHUB_ENV
-          else
-            echo "has_label=false" >> $GITHUB_ENV
-          fi
 
       - name: Run script.sh
         if: env.has_label == 'true'
