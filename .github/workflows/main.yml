@@ -18,8 +18,7 @@ jobs:
       - name: Check if issue has 'autocoder-bot' label
         id: check_label
         run: |
-          labels=$(echo "${{ toJson(github.event.issue.labels) }}" | jq -r '.[].name')
-          if echo "$labels" | grep -q 'autocoder-bot'; then
+          if [[ "${{ github.event.issue.labels }}" == *"autocoder-bot"* ]]; then
             echo "::set-output name=has_label::true"
           else
             echo "::set-output name=has_label::false"
