@@ -32,22 +32,22 @@ jobs:
           REPOSITORY: ${{ github.repository }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: ~/scripts/script.sh $GITHUB_TOKEN $REPOSITORY $ISSUE_NUMBER $OPENAI_API_KEY
+        run: ./scripts/script.sh $GITHUB_TOKEN $REPOSITORY $ISSUE_NUMBER $OPENAI_API_KEY
 
       - name: Upload generated files as artifacts
         if: env.has_label == 'true'
         uses: actions/upload-artifact@v3
         with:
           name: autocoder-artifact
-          path: ~/autocoder-bot
+          path: ./autocoder-bot
 
       - name: Download artifacts
         if: env.has_label == 'true'
         uses: actions/download-artifact@v3
         with:
           name: autocoder-artifact
-          path: ~/autocoder-artifact
+          path: ./autocoder-artifact
 
       - name: List files in artifact
         if: env.has_label == 'true'
-        run: ls -R ~/autocoder-artifact
+        run: ls -R ./autocoder-artifact
