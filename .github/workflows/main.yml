@@ -7,17 +7,35 @@ on:
 
 jobs:
   generate_code:
-    if: contains(join(github.event.issue.labels.*.name, ','), 'autocoder-bot')
     runs-on: ubuntu-latest
-
+    # Add debugging step to see what labels are present
     steps:
+      - name: Debug Labels
+        run: |
+          echo "Event name: ${{ github.event_name }}"
+          echo "Labels: ${{ toJson(github.event.issue.labels) }}"
+          
+      - name: Check Label
+        id: check_label
+        run: |
+          if [[ "${{ contains(github.event.issue.labels.*.name, 'autocoder-bot') }}" == "true" ]]; then
+            echo "Label found"
+            exit 0
+          else
+            echo "Required label 'autocoder-bot' not found"
+            exit 1
+          fi
+
       - name: Checkout Repository
+        if: success()
         uses: actions/checkout@v4
 
       - name: Set permissions for script.sh
+        if: success()
         run: chmod +x scripts/script.sh
 
       - name: Run script.sh
+        if: success()
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPOSITORY: ${{ github.repository }}
@@ -26,16 +44,19 @@ jobs:
         run: ./scripts/script.sh $GITHUB_TOKEN $REPOSITORY $ISSUE_NUMBER $OPENAI_API_KEY
 
       - name: Upload generated files as artifacts
+        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: autocoder-artifact
           path: ./autocoder-bot
 
       - name: Download artifacts
+        if: success()
         uses: actions/download-artifact@v4
         with:
           name: autocoder-artifact
           path: ./autocoder-artifact
 
       - name: List files in artifact
+        if: success()
         run: ls -R ./autocoder-artifact
