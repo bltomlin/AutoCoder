@@ -5,9 +5,9 @@ on:
     types: [opened, reopened, labeled]
 
 jobs:
-  generate_code:
-    if: contains(join(github.event.issue.labels.*.name, ','), 'autocoder-bot')
+  run-tests:
     runs-on: ubuntu-latest
+    if: contains(join(github.event.issue.labels.*.name, ','), 'autocoder-bot')
 
     steps:
       - name: Checkout Repository
