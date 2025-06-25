@@ -8,7 +8,7 @@ on:
 jobs:
   generate_code:
     # Simplify the condition to directly check the label
-    if: ${{ contains(toJSON(github.event.issue.labels), 'autocoder-bot') }}
+    if: contains(join(github.event.issue.labels.*.name, ','), 'autocoder-bot')
     runs-on: ubuntu-latest
 
     steps:
