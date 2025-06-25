@@ -3,6 +3,7 @@ name: Autocoder Bot Workflow
 on:
   issues:
     types: [opened, reopened, labeled]
+  workflow_dispatch:
 
 jobs:
   generate_code:
@@ -13,10 +14,8 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Set permissions for script.sh
-        run: chmod +x scripts/script.sh
-
-      - name: Run script.sh
+      - name: Generate Code with ChatGPT
+        id: generate_code
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPOSITORY: ${{ github.repository }}
@@ -24,17 +23,11 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: ./scripts/script.sh $GITHUB_TOKEN $REPOSITORY $ISSUE_NUMBER $OPENAI_API_KEY
 
-      - name: Upload generated files as artifacts
+      - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: autocoder-artifact
           path: ./autocoder-bot
 
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: autocoder-artifact
-          path: ./autocoder-artifact
-
-      - name: List files in artifact
-        run: ls -R ./autocoder-artifact
+      - name: Display Generated Code using the ls command
+        run: ls -R ./autocoder-bot
