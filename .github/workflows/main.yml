@@ -6,8 +6,8 @@ on:
 
 jobs:
   run-tests:
-    runs-on: ubuntu-latest
     if: contains(join(github.event.issue.labels.*.name, ','), 'autocoder-bot')
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
