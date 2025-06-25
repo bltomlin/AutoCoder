@@ -1,31 +1,44 @@
-name: Autocoder Bot
-
+name: Autocoder Bot Workflow
+ 
 on:
   issues:
-    types: [opened]
-
+    types: [opened, reopened, labeled]
+ 
 jobs:
   generate_code:
+    if: contains(join(github.event.issue.labels.*.name, ','), 'autocoder-bot')
     runs-on: ubuntu-latest
-
+ 
     steps:
-      - name: 📥 Checkout repository
-        uses: actions/checkout@v3
-
-      - name: 🧰 Install jq
-        run: sudo apt-get install -y jq
-
-      - name: 🧠 Run Autocoder script
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+ 
+      - name: Set permissions for script.sh
+        run: chmod +x scripts/script.sh
+ 
+      - name: Run script.sh
+        if: env.has_label == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPOSITORY: ${{ github.repository }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: |
-          bash ./autocoder.sh "$GITHUB_TOKEN" "${{ github.repository }}" "${{ github.event.issue.number }}" "$OPENAI_API_KEY"
-
-      - name: 📤 Commit generated code
-        run: |
-          git config user.name "autocoder[bot]"
-          git config user.email "autocoder@users.noreply.github.com"
-          git add autocoder-bot
-          git commit -m "🤖 Generated code from issue #${{ github.event.issue.number }}" || echo "Nothing to commit"
-          git push
+        run: ./scripts/script.sh $GITHUB_TOKEN $REPOSITORY $ISSUE_NUMBER $OPENAI_API_KEY
+ 
+      - name: Upload generated files as artifacts
+        if: env.has_label == 'true'
+        uses: actions/upload-artifact@v2
+        with:
+          name: autocoder-artifact
+          path: ./autocoder-bot
+ 
+      - name: Download artifacts
+        if: env.has_label == 'true'
+        uses: actions/download-artifact@v2
+        with:
+          name: autocoder-artifact
+          path: ./autocoder-artifact
+ 
+      - name: List files in artifact
+        if: env.has_label == 'true'
+        run: ls -R ./autocoder-artifact
