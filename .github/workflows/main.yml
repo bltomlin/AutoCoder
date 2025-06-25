@@ -5,11 +5,6 @@ on:
     types: [opened, reopened, labeled]
 
 jobs:
-  check-label:
-      runs-on: ubuntu-latest
-      if: contains(github.event.pull_request.labels.*.name, 'autocoder-bot')
-      steps:
-        - uses: actions/checkout@v4
 
   generate_code:
     runs-on: ubuntu-latest
