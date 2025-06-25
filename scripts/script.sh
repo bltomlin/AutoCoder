@@ -1,83 +1,84 @@
 #!/bin/bash
 
-# Usage: ./autocoder.sh <GITHUB_TOKEN> <REPO> <ISSUE_NUMBER> <OPENAI_API_KEY>
+# Exit immediately if a command exits with a non-zero status.
+set -e
 
+# log every command
+set -x
+
+# Get inputs from the environment
 GITHUB_TOKEN="$1"
 REPOSITORY="$2"
 ISSUE_NUMBER="$3"
 OPENAI_API_KEY="$4"
 
-# Function to fetch issue details from GitHub
+# Function to fetch issue details from GitHub API
 fetch_issue_details() {
     curl -s -H "Authorization: token $GITHUB_TOKEN" \
          "https://api.github.com/repos/$REPOSITORY/issues/$ISSUE_NUMBER"
 }
 
-# Function to call OpenAI API
+# Function to send prompt to the ChatGPT model (OpenAI API)
 send_prompt_to_chatgpt() {
-    curl -s -X POST "https://api.openai.com/v1/chat/completions" \
-        -H "Authorization: Bearer $OPENAI_API_KEY" \
-        -H "Content-Type: application/json" \
-        -d "{\"model\": \"gpt-3.5-turbo\", \"messages\": $MESSAGES_JSON, \"max_tokens\": 1000}"
+curl -s -X POST "https://api.openai.com/v1/chat/completions" \
+    -H "Authorization: Bearer $OPENAI_API_KEY" \
+    -H "Content-Type: application/json" \
+    -d "{\"model\": \"gpt-3.5-turbo\", \"messages\": $MESSAGES_JSON, \"max_tokens\": 500}"
 }
+
 
 # Function to save code snippet to file
 save_to_file() {
+    #  the script will save the code snippets to files in a directory named "autocoder-bot" with the filename specified in the JSON object.
     local filename="autocoder-bot/$1"
     local code_snippet="$2"
 
     mkdir -p "$(dirname "$filename")"
     echo -e "$code_snippet" > "$filename"
-    echo "✅ Saved: $filename"
+    echo "The code has been written to $filename"
 }
 
-# Start
-echo "🔍 Fetching GitHub issue #$ISSUE_NUMBER..."
+# Fetch and process issue details
 RESPONSE=$(fetch_issue_details)
 ISSUE_BODY=$(echo "$RESPONSE" | jq -r .body)
 
-if [[ -z "$ISSUE_BODY" || "$ISSUE_BODY" == "null" ]]; then
-    echo "❌ Issue body is empty or not found."
+if [[ -z "$ISSUE_BODY" ]]; then
+    echo 'Issue body is empty or not found in the response.'
     exit 1
 fi
 
-# Construct prompt
-INSTRUCTIONS="Generate a JSON object where keys are file paths and values are code snippets. Output strictly valid JSON — no Markdown or formatting."
+# Define clear, additional instructions for GPT regarding the response format
+INSTRUCTIONS="Based on the description below, please generate a JSON object where the keys represent file paths and the values are the corresponding code snippets for a production-ready application. The response should be a valid strictly JSON object without any additional formatting, markdown, or characters outside the JSON structure."
 
+# Combine the instructions with the issue body to form the full prompt
 FULL_PROMPT="$INSTRUCTIONS\n\n$ISSUE_BODY"
-MESSAGES_JSON=$(jq -n --arg content "$FULL_PROMPT" '[{"role":"user","content":$content}]')
 
-# Query OpenAI
-echo "💬 Sending prompt to OpenAI..."
+# Prepare the messages array for the ChatGPT API, including the instructions
+MESSAGES_JSON=$(jq -n --arg body "$FULL_PROMPT" '[{"role": "user", "content": $body}]')
+
+# Send the prompt to the ChatGPT model
 RESPONSE=$(send_prompt_to_chatgpt)
 
 if [[ -z "$RESPONSE" ]]; then
-    echo "❌ No response from OpenAI API."
+    echo "No response received from the OpenAI API."
     exit 1
 fi
 
-# Extract raw message
-RAW_CONTENT=$(echo "$RESPONSE" | jq -r '.choices[0].message.content')
+# Extract the JSON dictionary from the response
+# Make sure that the extracted content is valid JSON
+FILES_JSON=$(echo "$RESPONSE" | jq -e '.choices[0].message.content | fromjson' 2> /dev/null)
 
-# Remove triple backtick markdown if present
-CLEAN_CONTENT=$(echo "$RAW_CONTENT" | sed '/^```/,/^```/d')
-
-# Parse JSON
-echo "🧪 Parsing JSON response..."
-FILES_JSON=$(echo "$CLEAN_CONTENT" | jq -e '.' 2>/dev/null)
-if [[ $? -ne 0 || -z "$FILES_JSON" ]]; then
-    echo "❌ Failed to parse JSON. Here is the raw content:"
-    echo "$RAW_CONTENT"
+if [[ -z "$FILES_JSON" ]]; then
+    echo "No valid JSON dictionary found in the response or the response was not valid JSON. Please rerun the job."
     exit 1
 fi
 
-# Save each file
-echo "📁 Writing files..."
+# Iterate over each key-value pair in the JSON dictionary
 for key in $(echo "$FILES_JSON" | jq -r 'keys[]'); do
-    FILENAME="$key"
+    FILENAME=$key
     CODE_SNIPPET=$(echo "$FILES_JSON" | jq -r --arg key "$key" '.[$key]')
-    CODE_SNIPPET=$(echo "$CODE_SNIPPET" | sed 's/\r$//')
+    CODE_SNIPPET=$(echo "$CODE_SNIPPET" | sed 's/\r$//') # Normalize line endings
     save_to_file "$FILENAME" "$CODE_SNIPPET"
 done
 
-echo "✅ All files written successfully."
+echo "All files have been processed successfully."
