@@ -6,7 +6,7 @@ on:
  
 jobs:
   generate_code:
-    if: github.event.issue.label
+    if: contains(github.event.issue.labels.*.name, 'autocoder-bot')
     runs-on: ubuntu-latest
  
     steps:
