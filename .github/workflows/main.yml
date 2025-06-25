@@ -6,21 +6,10 @@ on:
 
 jobs:
   generate_code:
+    if: contains(fromJson(toJson(github.event.issue.labels)).*.name, 'autocoder-bot')
     runs-on: ubuntu-latest
 
     steps:
-      - name: Fail if 'autocoder-bot' label is missing
-        run: |
-          echo "Checking for 'autocoder-bot' label..."
-          labels=$(echo '${{ toJson(github.event.issue.labels) }}' | jq -r '.[] | .name')
-          echo "Found labels: $labels"
-          if echo "$labels" | grep -q 'autocoder-bot'; then
-            echo "Label check passed."
-          else
-            echo "Label 'autocoder-bot' not found. Failing job."
-            exit 1
-          fi
-
       - name: Checkout Repository
         uses: actions/checkout@v4
 
