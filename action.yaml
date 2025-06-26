@@ -46,13 +46,13 @@ runs:
         ISSUE_NUMBER: ${{ inputs.issue_number }}
 
     - name: Upload Artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: autocoder-artifact
         path: autocoder-bot/
 
     - name: Download Artifact
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v4
       with:
         name: autocoder-artifact
         path: autocoder-artifact/
