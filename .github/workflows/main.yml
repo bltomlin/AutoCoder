@@ -62,7 +62,7 @@ jobs:
           git commit -m "Add generated code from ChatGPT"
 
       - name: Create Pull Request
-        uses: bltomlin/create-pull-request@main
+        uses: peter-evans/create-pull-request@v6
         with:
           labels: "autocoder-bot"
           author: autocoder-bot <actions@github.com>
