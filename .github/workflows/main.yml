@@ -2,7 +2,7 @@ name: Autocoder Bot Workflow
 
 on:
   issues:
-    types: [opened, labeled, reopened]
+    types: [opened, reopened, labeled]
 
 jobs:
   generate_code:  # ← required name
