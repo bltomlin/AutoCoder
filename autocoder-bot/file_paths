@@ -1,0 +1,17 @@
+{
+  "Dockerfile": "FROM python:3.8
+WORKDIR /app
+COPY . /app
+RUN pip install -r requirements.txt
+CMD [\"python\", \"app.py\"]",
+  "docker-compose.yml": "version: '3'
+services:
+  web:
+    build: .
+    ports:
+      - \"5000:5000\"
+    volumes:
+      - .:/app
+    environment:
+      FLASK_ENV: development"
+}
