@@ -58,10 +58,5 @@ jobs:
           git add ./autocoder-artifact
           git commit -m "Add generated code from ChatGPT"
 
-      - name: Create Pull Request
-        uses: bltomlin/create-pull-request@v1
-        with:
-          labels: "autocoder-bot"
-          author: autocoder-bot <actions@github.com>
-          title: "#${{ github.event.issue.number }}"
-          branch: autocoder-branch-${{ github.event.issue.number }}
+      - name: Request Review
+        run: gh pr review ${{ github.event.pull_request.number }} --request
