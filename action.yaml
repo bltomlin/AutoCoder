@@ -31,6 +31,7 @@ runs:
   using: 'composite'
   steps:
     - name: Checkout Repository
+      shell: bash
       uses: actions/checkout@v4
     - name: Configure Git
       run: |
