@@ -47,8 +47,8 @@ runs:
       run: ./scripts/script.sh "${{ env.GITHUB_TOKEN }}" "${{ env.REPOSITORY }}" "${{ env.ISSUE_NUMBER }}" "${{ env.OPENAI_API_KEY }}"
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
-        REPOSITORY: ${{ inputs.repository }}
-        ISSUE_NUMBER: ${{ inputs.issue.number }}
+        REPOSITORY: ${{ inputs.REPOSITORY }}
+        ISSUE_NUMBER: ${{ inputs.ISSUE_NUMBER }}
         OPENAI_API_KEY: ${{ inputs.OPENAI_API_KEY }}
       shell: bash
     
