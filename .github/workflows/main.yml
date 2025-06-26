@@ -4,6 +4,10 @@ on:
   issues:
     types: [opened, reopened, labeled]
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   generate_code:  # ← required name
     if: contains(github.event.issue.labels.*.name, 'autocoder-bot')  # ← required job-level condition
@@ -12,6 +16,11 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+
+      - name: Configure Git
+        run: |
+          git config --local user.name "autocoder-bot"
+          git config --local user.email "actions@github.com"
 
       - name: Set permissions for script.sh  # ← required step name
         run: chmod +x ./scripts/script.sh    # ← required exact command
@@ -38,3 +47,18 @@ jobs:
 
       - name: List files in artifact
         run: ls -R ./autocoder-artifact
+
+      - name: Commit Changes
+        run: |
+          git config --local user.name "autocoder-bot"
+          git config --local user.email "actions@github.com"
+          git add ./autocoder-artifact
+          git commit -m "Add generated code from ChatGPT"
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          labels: "autocoder-bot"
+          author: autocoder-bot <actions@github.com>
+          title: "#${{ github.event.issue.number }}"
+          branch: autocoder-branch-${{ github.event.issue.number }}
