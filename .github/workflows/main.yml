@@ -2,19 +2,19 @@ name: Autocoder Bot Workflow
 
 on:
   issues:
-    types: [opened, reopened, labeled]
+    types: [opened, labeled, reopened]
 
 jobs:
-  generate_code:
-    if: contains(github.event.issue.labels.*.name, 'autocoder-bot')
+  generate_code:  # ← required name
+    if: contains(github.event.issue.labels.*.name, 'autocoder-bot')  # ← required job-level condition
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Set permissions for script.sh
-        run: chmod +x scripts/script.sh
+      - name: Set permissions for script.sh  # ← required step name
+        run: chmod +x scripts/script.sh      # ← required exact command
 
       - name: Run script.sh
         env:
