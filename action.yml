@@ -1,6 +1,14 @@
 
 name: 'AutoCoder'
-description: "AutoCoder is a personal project that explores the intersection of DevOps and Generative AI. It’s a custom GitHub Action I developed to automate parts of the software development workflow using AI-powered code generation. The goal is to reduce manual effort in routine coding tasks by leveraging AI models that understand natural language and generate relevant code snippets on the fly. This Action listens for issues or events in a GitHub repository, interprets user intent, and creates pull requests with generated code—streamlining the path from idea to implementation."
+description: >
+  This GitHub Action automates the end-to-end process of generating code from GitHub issues using OpenAI’s ChatGPT.
+  It reads the content of an issue, interprets the requirements using AI, and generates the corresponding code automatically.
+  The action then creates a dedicated branch, commits the AI-generated code, and opens a pull request for human review.
+  This enables seamless integration of AI into your development workflow, enhancing productivity and reducing manual coding effort.
+  It is highly configurable—supporting custom prompts, file templates, branch naming strategies, and trigger events such as issue creation or labeling.
+  Whether you're building new features, writing tests, or scaffolding boilerplate, this action translates natural language into functional code.
+  It’s ideal for individuals and teams looking to explore or adopt AI-powered development workflows directly within GitHub.
+  By automating repetitive tasks and code scaffolding, this tool accelerates prototyping, encourages collaboration, and brings AI into the heart of DevOps.
 author: 'Brendan Tomlinson'
 
 inputs:
