@@ -12,11 +12,6 @@ REPOSITORY="$2"
 ISSUE_NUMBER="$3"
 OPENAI_API_KEY="$4"
 
-if [[ -z "$ISSUE_NUMBER" || "$ISSUE_NUMBER" == "null" ]]; then
-  echo "An error occurred while accessing the repository: Not Found"
-  exit 1
-fi
-
 # Function to fetch issue details from GitHub API
 fetch_issue_details() {
     curl -s -H "Authorization: token $GITHUB_TOKEN" \
