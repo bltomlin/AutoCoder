@@ -4,24 +4,23 @@ description: 'This action automates the process of generating code from GitHub i
 author: 'Brendan Tomlinson'
 
 inputs:
-  github_token:
+  GITHUB_TOKEN:
     description: 'Personal access token (PAT) used for GitHub API authentication. This token is required to create pull requests and handle other repository interactions.'
     required: true
-  openai_api_key:
-    description: 'API key for OpenAI, enabling interactions with the ChatGPT service to generate code based on issue descriptions.'
-    required: true
-  issue_label:
-    description: 'The label assigned to GitHub issues that should be processed by the AutoCoder action. Only issues with this label will trigger the code generation process.'
-    required: true
-    default: 'autocoder-bot'
-  repository:
+  REPOSITORY:
     description: 'The repository where the action will be executed.'
     required: true
-  issue_number:
+  ISSUE_NUMBER:
     description: 'The number of the issue that triggered the action.'
     required: true
-  script_path:
+  OPENAI_API_KEY:
+    description: 'API key for OpenAI, enabling interactions with the ChatGPT service to generate code based on issue descriptions.'
+    required: true
+  SCRIPT_PATH:
     description: 'The path to the script that interacts with ChatGPT and generates code.'
+    required: true
+  LABEL:
+    description: 'Allows users to customize the label that triggers the action.'
     required: true
 
 outputs:
