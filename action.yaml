@@ -45,8 +45,32 @@ runs:
         REPOSITORY: ${{ inputs.repository }}
         ISSUE_NUMBER: ${{ inputs.issue_number }}
 
-    - name: Upload generated files
-      uses: actions/upload-artifact@v4
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v2
       with:
         name: autocoder-artifact
         path: autocoder-bot/
+
+    - name: Download Artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: autocoder-artifact
+        path: autocoder-artifact/
+
+    - name: List Files
+      run: ls -R ./autocoder-artifact
+    
+    - name: Commit Changes
+      run: |
+        git config --local user.email "actions@github.com"
+        git config --local user.name "autocoder-bot"
+        git add .
+        git commit -m "Add generated code from ChatGPT"
+    
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v6
+      with:
+        labels: "autocoder-bot"
+        author: autocoder-bot <actions@github.com>
+        title: "#${{ github.event.issue.number }}"
+        branch: autocoder-branch-${{ inputs.issue.number }}
