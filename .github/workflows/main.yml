@@ -13,10 +13,10 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Make script executable
+      - name: Set permissions for script.sh
         run: chmod +x scripts/script.sh
 
-      - name: Run script
+      - name: Run script.sh
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPOSITORY: ${{ github.repository }}
