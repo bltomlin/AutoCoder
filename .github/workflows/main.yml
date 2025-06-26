@@ -19,7 +19,7 @@ jobs:
 
       - name: Generate Code with ChatGPT
         id: generate_code
-        uses: bltomlin/AutoCoder@1.0.2
+        uses: bltomlin/AutoCoder@1.02
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPOSITORY: ${{ github.repository }}
