@@ -62,6 +62,6 @@ jobs:
           git commit -m "Add generated code from ChatGPT"
 
       - name: Request Review
-        run: gh pr edit ${{ github.event.pull_request.number }} --add-reviewer <username>
+        run: gh pr edit ${{ github.event.pull_request.number }} --add-reviewer autocoder-bot
         env:
             GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
