@@ -1,3 +1,9 @@
 # AutoCoder
-AutoCoder is a groundbreaking project at the forefront of DevOps and AI integration. This solo endeavor focuses on creating a custom GitHub Action powered by Generative AI for automated code generation. It involves designing intricate workflows, scripting interactions with OpenAI, implementing rigorous security standards, and ultimately packaging the solution into a reusable GitHub Action. AutoCoder not only demonstrates technical proficiency but also showcases innovation in leveraging AI for enhanced efficiency and productivity in software development.
+AutoCoder is a personal project that explores the intersection of DevOps and Generative AI. It’s a custom GitHub Action I developed to automate parts of the software development workflow using AI-powered code generation. The goal is to reduce manual effort in routine coding tasks by leveraging AI models that understand natural language and generate relevant code snippets on the fly.
+
+This Action listens for issues or events in a GitHub repository, interprets user intent, and creates pull requests with generated code—streamlining the path from idea to implementation. It’s designed to be flexible, extensible, and easy to integrate into existing workflows.
+
+AutoCoder is part of my broader interest in developer productivity and intelligent automation. While still evolving, it demonstrates how AI can act as a collaborative assistant in DevOps pipelines, helping teams move faster without sacrificing quality.
+
+This is an experimental project, built and maintained independently.
 
