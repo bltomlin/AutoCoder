@@ -40,6 +40,7 @@ runs:
     
     - name: make the script executable
       run: chmod +x ./scripts/script.sh
+      shell: bash
     
     - name: Generate Code with ChatGPT
       id: generate_code
@@ -65,6 +66,7 @@ runs:
 
     - name: List Files
       run: ls -R ./autocoder-artifact
+      shell: bash
     
     - name: Commit Changes
       run: |
