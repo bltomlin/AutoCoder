@@ -1,0 +1,21 @@
+{
+  "Dockerfile": "FROM node:14
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+CMD [\"npm\", \"start\"]",
+  "docker-compose.yml": "version: '3'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '3000:3000'
+    volumes:
+      - .:/app
+    environment:
+      NODE_ENV: production
+    restart: always"
+}
